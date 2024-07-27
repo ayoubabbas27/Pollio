@@ -12,8 +12,7 @@ const db = mysql.createPool({
 async function getMemberData (){
     const [data] = await db.query(`SELECT * FROM members`);
     return data;
-}
-
+} 
  
 const member = await getMemberData()
 console.log('query result : ', member);
