@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "start": "node dist/server.js",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
   },
