@@ -14,9 +14,8 @@ function SignUp() {
   function handleSubmit (event: React.FormEvent<HTMLFormElement>){
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const {username, email, password} = Object.fromEntries(formData.entries());
-    // console.log(data);
-    // CreateNewUser(data)
+    const {email, password, username} = Object.fromEntries(formData.entries());
+    CreateNewUser(email as string, password as string, username as string);
     {/*Handle creating a new user */}
   }
 

@@ -23,10 +23,24 @@ export async function FetchData (
     })
   }
 
-export function CreateNewUser (data: FormDataEntryValue){
-  
-  
-  // console.log('username : ', username);
-  // console.log('email : ', email);
-  // console.log('password : ', password);
+export async function CreateNewUser (email: string, password: string, username: string){
+  const cleanedUsername: string = username.trim().split(' ').join('_');
+  const path: string = `${import.meta.env.VITE_SERVER_ORIGIN}/sign_up`;
+  const data = {username: cleanedUsername, email, password};
+  await axios.post(path, data)
+  .then((res) => {
+    console.log(res.data);
+    console.log(`
+      User creation - SUCCESS \n
+      path: ${path}   
+      response:
+      `, res);
+  })
+  .catch((err) => {
+    console.log(`
+      User creation - FAILURE \n
+      path: ${path}  
+      error:  
+  `, err);
+  })
 }
