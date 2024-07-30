@@ -1,6 +1,7 @@
 import express, {Express} from "express"
 import cors from "cors";
 import body_parser from "body-parser"
+import cookieParser from "cookie-parser";
 import router from "./routes/router.js"
 import dotenv from 'dotenv';
 
@@ -17,6 +18,7 @@ const corsOptions = {
 const PORT: number = Number(process.env.SERVER_PORT);
 
 app.use(body_parser.json());
+app.use(cookieParser());
 app.use(body_parser.urlencoded({extended: false}));
 
 app.use(cors(corsOptions));

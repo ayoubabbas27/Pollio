@@ -5,31 +5,45 @@ import { CreateNewUser } from "@/lib/actions";
 
 function SignUp() {
 
-  const [error, setError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [pending, setPending] = useState(true);
 
   const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  const email_regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  function handleSubmit (event: React.FormEvent<HTMLFormElement>){
+  async function handleSubmit (event: React.FormEvent<HTMLFormElement>){
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const {email, password, username} = Object.fromEntries(formData.entries());
-    CreateNewUser(email as string, password as string, username as string);
-    {/*Handle creating a new user */}
+    setPending(true);
+    await CreateNewUser(email as string, password as string, username as string, setEmailError, setPending);
   }
 
   function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
     setPassword(event.target.value);
     if (event.target.value.length === 0 || password_regex.test(event.target.value)) {
-      setError('');
+      setPasswordError('');
       !(event.target.value.length === 0) && setPending(false);
     } else {
-      setError('The password must contain at least 6 characters, including at least one letter and one number,without any spaces or special characters');
+      setPasswordError('Error : The password must contain at least 6 characters, including at least one letter and one number,without any spaces or special characters');
       setPending(true);
     }
   }
 
+  function handleEmailChange (event: React.ChangeEvent<HTMLInputElement>){
+    setEmail(event.target.value);
+    if (event.target.value.length === 0 || email_regex.test(event.target.value)) {
+      setEmailError('');
+    }else{
+      setEmailError('Error : The email address is not valid.');
+      setPending(true);
+    }
+  }
+
+//test@gmail.com , testpassword11
 
   return (
     <main className="w-full h-[100vh] flex justify-center items-center">
@@ -53,14 +67,19 @@ function SignUp() {
             </div>
             <div className="w-full">
               <UI.Label htmlFor="email">Email</UI.Label>
-              <UI.Input required name="email" type="email" id="email" placeholder="example@gmail.com"/>
+              <UI.Input required name="email" type="email" id="email" placeholder="example@gmail.com" value={email} onChange={(e) => handleEmailChange(e)}/>
+              {email.length > 0 && emailError && (
+                <span className="text-destructive text-sm mt-2 max-w-full break-words whitespace-pre-wrap">
+                  {emailError}
+                </span>
+              )}
             </div>
             <div className="w-full">
               <UI.Label htmlFor="password">Password</UI.Label>
-              <UI.Input required name="password" type="password" id="password" placeholder="Enter your password" value={password} onChange={(e) => {handlePasswordChange(e)} }/>
-              {password.length > 0 && error && (
+              <UI.Input required name="password" type="password" id="password" placeholder="Enter your password" value={password} onChange={(e) => handlePasswordChange(e)}/>
+              {password.length > 0 && passwordError && (
                 <span className="text-destructive text-sm mt-2 max-w-full break-words whitespace-pre-wrap">
-                  {error}
+                  {passwordError}
                 </span>
               )}
             </div>

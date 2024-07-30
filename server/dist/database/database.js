@@ -1,4 +1,4 @@
-import mysql from "mysql2";
+import mysql from "mysql2/promise";
 import * as dotenv from 'dotenv';
 dotenv.config();
 const pool = mysql.createPool({
@@ -6,7 +6,12 @@ const pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
-}).promise();
+});
+export const db = {
+    isEmailExists,
+    createUser,
+    findUser
+};
 async function isEmailExists(email) {
     try {
         const [data] = await pool.query(`
@@ -29,6 +34,8 @@ async function createUser(username, email, hashedPassword) {
         await pool.query(`
             INSERT INTO members (email, name, password) VALUES (?, ?, ?)
         `, [email, username, hashedPassword]);
+        const user = await db.findUser(email);
+        return user;
     }
     catch (error) {
         console.log(`
@@ -41,7 +48,12 @@ async function createUser(username, email, hashedPassword) {
         `);
     }
 }
-export const db = {
-    isEmailExists,
-    createUser
-};
+async function findUser(email) {
+    const [rows] = await pool.query(`
+        SELECT * FROM members
+        WHERE email = ?
+    `, [email]);
+    const userArray = rows;
+    const user = userArray[0];
+    return user;
+}
