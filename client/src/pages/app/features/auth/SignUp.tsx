@@ -2,6 +2,7 @@ import { UI } from "@/components"
 import { Link } from "react-router-dom"
 import { useState } from "react";
 import { CreateNewUser } from "@/lib/actions";
+import { useSignup } from "../../hooks/useSignup";
 
 function SignUp() {
 
@@ -10,6 +11,7 @@ function SignUp() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [pending, setPending] = useState(true);
+  const {signup} = useSignup();
 
   const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
   const email_regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -19,7 +21,9 @@ function SignUp() {
     const formData = new FormData(event.currentTarget);
     const {email, password, username} = Object.fromEntries(formData.entries());
     setPending(true);
-    await CreateNewUser(email as string, password as string, username as string, setEmailError, setPending);
+
+    await signup(email as string, password as string, username as string, setEmailError, setPending);
+    
   }
 
   function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {

@@ -2,6 +2,7 @@ import express from "express";
 import { db } from "../database/database.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 dotenv.config();
 const router = express.Router();
@@ -23,12 +24,13 @@ router.post('/api/sign_up', async (req, res) => {
         else {
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(password, salt);
-            const newUser = await db.createUser(username, email, hashedPassword);
+            const id = uuidv4();
+            const newUser = await db.createUser(id, username, email, hashedPassword);
             const token = await createToken(newUser?.id);
             res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false });
             res.json({
                 success: true,
-                userId: newUser?.id,
+                user: newUser,
                 token
             });
         }
@@ -50,7 +52,7 @@ router.post('/api/login', async (req, res) => {
             if (auth) {
                 const token = await createToken(user.id);
                 res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000, secure: false });
-                res.status(200).json({ user: user.id, token });
+                res.status(200).json({ user, token });
             }
             else {
                 res.status(400).json('Incorrect password');
@@ -66,16 +68,26 @@ router.post('/api/login', async (req, res) => {
         res.status(400).json(error);
     }
 });
-router.get('/api/dashboard', (req, res) => {
+router.get('/api/dashboard', async (req, res) => {
     res.json("dashboard data extracted from the DB");
 });
-router.get('/api/my_polls', (req, res) => {
-    res.json("Polls data information");
+router.get('/api/my_polls', async (req, res) => {
+    const userId = req.query.userId;
+    const pollsData = await db.getPollsForUser(userId);
+    res.json(pollsData);
 });
-router.get('/api/teams', (req, res) => {
-    res.json("Teams data information");
-});
-router.get('/api/polling_requests', (req, res) => {
-    res.json("Polling Requests data information");
+router.post('/api/my_polls/new', async (req, res) => {
+    const { creatorID, question, options } = req.body;
+    const pollID = uuidv4();
+    const urlToken = uuidv4();
+    const optionsJSON = JSON.stringify(options);
+    const votes = options.reduce((acc, curr) => {
+        acc[curr] = 0;
+        return acc;
+    }, {});
+    const votesJSON = JSON.stringify(votes);
+    const newPoll = await db.createPoll(creatorID, question, optionsJSON, pollID, urlToken, votesJSON);
+    console.log(newPoll);
+    res.json(newPoll);
 });
 export default router;

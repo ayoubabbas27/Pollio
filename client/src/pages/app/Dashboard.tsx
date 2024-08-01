@@ -1,11 +1,13 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { FetchData } from "@/lib/actions"
+import { useAuthContext } from "./hooks/useAuthContext"
 
 function Dashboard() {
-  
+  const context = useAuthContext()
+
   useEffect(() => {
-    FetchData(setPageData, '/dashboard');
+    FetchData(setPageData, '/dashboard', context.state.user.userObj.id);
   },[])
 
   const [pageData, setPageData] = useState({});

@@ -10,7 +10,10 @@ const pool = mysql.createPool({
 export const db = {
     isEmailExists,
     createUser,
-    findUser
+    findUser,
+    getPollsForUser,
+    getPollData,
+    createPoll
 };
 async function isEmailExists(email) {
     try {
@@ -29,11 +32,11 @@ async function isEmailExists(email) {
         console.log("Error in isEmailExists function : ", error);
     }
 }
-async function createUser(username, email, hashedPassword) {
+async function createUser(id, username, email, hashedPassword) {
     try {
         await pool.query(`
-            INSERT INTO members (email, name, password) VALUES (?, ?, ?)
-        `, [email, username, hashedPassword]);
+            INSERT INTO users (id, email, name, password) VALUES (?, ?, ?, ?)
+        `, [id, email, username, hashedPassword]);
         const user = await db.findUser(email);
         return user;
     }
@@ -50,10 +53,41 @@ async function createUser(username, email, hashedPassword) {
 }
 async function findUser(email) {
     const [rows] = await pool.query(`
-        SELECT * FROM members
+        SELECT * FROM users
         WHERE email = ?
     `, [email]);
     const userArray = rows;
     const user = userArray[0];
     return user;
+}
+async function getPollsForUser(userId) {
+    const [rows] = await pool.query(`
+        SELECT * FROM polls
+        WHERE creator_id = ?    
+    `, [userId]);
+    const pollsArray = rows;
+    return pollsArray;
+}
+async function getPollData(pollID) {
+    const [rows] = await pool.query(`
+        SELECT * FROM polls
+        WHERE id = ?    
+    `, [pollID]);
+    const pollArray = rows;
+    const poll = pollArray[0];
+    return poll;
+}
+async function createPoll(creatorID, question, optionsJSON, pollID, urlToken, votesJSON) {
+    await pool.query(`
+        INSERT INTO polls (
+            id,
+            question,
+            options,
+            votes,
+            url_token,
+            creator_id
+        ) VALUES (?, ?, ?, ?, ?, ?) 
+    `, [pollID, question, optionsJSON, votesJSON, urlToken, creatorID]);
+    const newPoll = await getPollData(pollID);
+    return newPoll;
 }

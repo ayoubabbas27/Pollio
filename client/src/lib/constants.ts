@@ -8,6 +8,4 @@ export const LANDING_PAGE_NAV_LINKS = [
 export const DASH_NAV_LINKS = [
     { href: '/dash', key: 'dashboard' , label: 'Dashboard' },
     { href: '/dash/my_polls', key: 'my_polls' , label: 'My Polls' },
-    { href: '/dash/teams', key: 'teams' , label: 'Teams' },
-    { href: '/dash/polling_requests', key: 'polling_requests' , label: 'Polling Requests' },
 ];

@@ -16,17 +16,26 @@ function LandingPage() {
           Poll<span className="text-[#16AF8E]">io</span>
         </span>
 
-        <Menu 
-          size={27}
-          className={`z-30 ${mobileNavVisible ? 'hidden' : 'block'} lg:hidden`}
-          onClick={() => setMobileNavVisible(true)}
-        />
-
-        <X 
-          size={27}
-          className={`z-30 ${mobileNavVisible ? 'block' : 'hidden'} lg:hidden`}
-          onClick={() => setMobileNavVisible(false)}
-        />
+        <UI.Button 
+                variant="ghost"
+                className={`z-30 rounded-full px-2 py-0 ${mobileNavVisible ? 'hidden' : 'block'} `}
+                onClick={() => setMobileNavVisible(true)}
+            >
+            <Menu 
+                size={27}
+                className="m-0 p-0"
+            />
+            </UI.Button>
+            <UI.Button 
+                variant="ghost"
+                className={`z-30 rounded-full px-2 py-0 ${mobileNavVisible ? 'block' : 'hidden'} `}
+                onClick={() => setMobileNavVisible(false)}
+            >
+            <X 
+                size={27}
+                className="m-0 p-0"
+            />
+            </UI.Button>
 
         <div className={`fixed top-0 z-20 bg-white h-[100vh] w-3/4 pt-14 px-3 transition-all duration-300 ease-in-out ${mobileNavVisible ? 'right-0' : '-right-full'} rounded-tl-3xl rounded-bl-3xl lg:hidden`}>
           <ul className="p-0 m-0 flex-col justify-center items-start gap-4 text-lg mb-10 mt-5">

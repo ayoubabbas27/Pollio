@@ -1,17 +1,19 @@
 import { UI } from "@/components"
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
-import { login } from "@/lib/actions";
+import { useLogin } from "../../hooks/useLogin"
+
 function Login() {
+
+  const {login} = useLogin();
 
   async function handleSubmit (event: React.FormEvent<HTMLFormElement>){
     event.preventDefault();
+    console.log('login handle submit function called')
     const formData = new FormData(event.currentTarget);
     const {email, password} = Object.fromEntries(formData.entries());
-    await login(email as string, password as string, setMessage, setPending, navigate);
+    await login(email as string, password as string, setMessage, setPending);
   }
-
-  const navigate = useNavigate();
 
   const [message, setMessage] = useState('');
   const [pending, setPending] = useState(false);
@@ -40,7 +42,7 @@ function Login() {
               <UI.Label htmlFor="password">Password</UI.Label>
               <UI.Input required name="password" type="password" id="password" placeholder="Enter your password"/>
             </div>
-            <UI.Button className="rounded-full" disabled={pending}>
+            <UI.Button type="submit" className="rounded-full" disabled={pending} >
               Login
             </UI.Button>
             <span className="text-destructive text-sm mt-2 max-w-full break-words whitespace-pre-wrap">

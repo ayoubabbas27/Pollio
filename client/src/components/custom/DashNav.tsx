@@ -2,11 +2,22 @@ import { Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { DASH_NAV_LINKS } from "@/lib/constants";
 import { UI } from "..";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLogout } from "@/pages/app/hooks/useLogout";
+import { useAuthContext } from "@/pages/app/hooks/useAuthContext";
 
 function DashNav() {
     const [mobileNavVisible, setMobileNavVisible] = useState(false);
     const location = useLocation();
+    const {logout} = useLogout();
+    const navigate = useNavigate()
+
+    function handleClick (){
+        logout();
+        navigate('/login');
+    }
+
+    const context = useAuthContext();
 
   return (
     <>
@@ -41,8 +52,8 @@ function DashNav() {
                     
                     <div className="w-full flex flex-row justify-between items-center px-3 ">
                         <div className="flex flex-col justify-center items-start">
-                            <span className="text-muted-foreground text-sm">User name</span>
-                            <span className="text-muted-foreground text-sm italic">user@gmail.com</span>
+                            <span className="text-muted-foreground text-sm">{(context.state.user === null) ? 'username': context.state.user.userObj.name}</span>
+                            <span className="text-muted-foreground text-sm italic">{(context.state.user === null) ? 'email': context.state.user.userObj.email}</span>
                         </div>
                         <UI.Avatar>
                             <UI.AvatarImage src="https://github.com/shadcn.png" />
@@ -71,9 +82,9 @@ function DashNav() {
                     <UI.Button 
                         variant='outline' 
                         className="rounded-full font-semibold text-md"
-                        asChild
+                        onClick={handleClick}
                     >
-                        <Link to="/" className="flex flex-row justify-center items-center gap-2">Log out <LogOut /></Link>
+                        Log out <LogOut />
                     </UI.Button>
                 </div>
 
@@ -100,8 +111,8 @@ function DashNav() {
                             <UI.AvatarFallback>CN</UI.AvatarFallback>
                         </UI.Avatar>
                         <div className="flex flex-col justify-center items-start ">
-                            <span className="text-muted-foreground text-sm">User name</span>
-                            <span className="text-muted-foreground text-sm italic">user@gmail.com</span>
+                            <span className="text-muted-foreground text-sm">{(context.state.user === null) ? 'username': context.state.user.userObj.name}</span>
+                            <span className="text-muted-foreground text-sm italic">{(context.state.user === null) ? 'email': context.state.user.userObj.email}</span>
                         </div>                
                     </div>
                 </div>
@@ -125,9 +136,9 @@ function DashNav() {
                 <UI.Button 
                         variant='outline' 
                         className="rounded-full font-semibold text-md "
-                        asChild
+                        onClick={handleClick}
                     >
-                        <Link to="/" className="flex flex-row justify-center items-center gap-2">Log out  <LogOut /> </Link>
+                        Log out  <LogOut />
                 </UI.Button>
             </div>
 

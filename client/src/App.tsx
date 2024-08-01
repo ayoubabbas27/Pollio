@@ -1,33 +1,33 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
+import { useAuthContext } from "./pages/app/hooks/useAuthContext"
 import { pages } from "@/pages"
 
 function App() {
+  const context = useAuthContext();
+  const user = context.state.user;
+
   return (
     <Routes>
       <Route path="/" element={<pages.Layout />}>
         <Route index element={<pages.LandingPage />}/> 
 
-        <Route path="login" element={<pages.Login />}/>
+        <Route path="login" element={ !user ? <pages.Login /> : <Navigate to="/dash" />}/>
 
-        <Route path="sign_up" element={<pages.SignUp />} />
+        <Route path="sign_up" element={ !user ? <pages.SignUp /> : <Navigate to="/dash" />} />
 
-        {/*Start dash Routes - Routes to protect*/}
-        <Route path="dash" element={<pages.DashLayout />}>
-          <Route index element={<pages.Dashboard />} />
+          {/*Start dash Routes - Routes to protect*/}
+          <Route path="dash" element={
+            user ? <pages.DashLayout /> : <Navigate to="/login" />
+          }>
+            <Route index element={<pages.Dashboard />} />
 
-          <Route path="my_polls" >
-            <Route index element={<pages.MyPolls />} />
-          </Route>
+            <Route path="my_polls" >
+              <Route index element={<pages.MyPolls />} />
 
-          <Route path="teams" >
-            <Route index element={<pages.Teams />} />
-          </Route>
+              <Route path="new" element={<pages.NewPoll />} />
+            </Route>
 
-          <Route path="polling_requests" >
-            <Route index element={<pages.PollingRequests />} />
-          </Route>
-
-        </Route>{/*End dash Routes */}
+          </Route>{/*End dash Routes */}
 
       </Route>
 
