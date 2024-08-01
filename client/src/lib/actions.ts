@@ -3,8 +3,24 @@ import { SetStateAction } from "react";
 import { NavigateFunction } from "react-router-dom";
 import { useAuthContext } from "@/pages/app/hooks/useAuthContext";
 
+ interface Poll {
+    id: string;
+    question: string;
+    options: string[];
+    votes: Record<string, number>;
+    url_token: string;
+    creator_id: string;
+    created_at: string;
+    is_active: number;
+  }
+
+  interface PageData {
+    totalPolls: number;
+    totalVotes: number;
+  }
+
 export async function FetchData (
-  setStateFunction: React.Dispatch<React.SetStateAction<{}>>, 
+  setStateFunction: React.Dispatch<React.SetStateAction<PageData>>, 
   pathSuffix: string,
   userId: number
 ){
@@ -26,17 +42,7 @@ export async function FetchData (
         error:  
     `, err);
     })
-  }
-  interface Poll {
-    id: string;
-    question: string;
-    options: string[];
-    votes: Record<string, number>;
-    url_token: string;
-    creator_id: string;
-    created_at: string;
-    is_active: number;
-  }
+}
 
 export async function FetchPollsData (
   setStateFunction: React.Dispatch<React.SetStateAction<Poll[]>>, 
@@ -61,7 +67,7 @@ export async function FetchPollsData (
         error:  
     `, err);
     })
-  }
+}
 
 export async function CreateNewUser (email: string, password: string, username: string, cb1: React.Dispatch<React.SetStateAction<string>>, cb2: React.Dispatch<React.SetStateAction<boolean>>){
 
@@ -132,3 +138,64 @@ export async function createNewPoll (creatorID: string, question: string, option
     console.log('create poll - Failure \n ', err)
   })
 }
+
+export async function togglePollState (pollID: string, newState: number){
+  const data = { pollID , newState};
+  const path: string = `${import.meta.env.VITE_SERVER_ORIGIN}/my_polls/toggleState`;
+
+  await axios.patch(path, data, { withCredentials: true })
+  .then((res) => {
+    console.log('State updated : ',res.data);
+  })
+  .catch((err) => {
+    console.log('error while updating poll state : ', err);
+  })
+}
+
+export async function deletePoll (pollID: string) {
+  const path: string = `${import.meta.env.VITE_SERVER_ORIGIN}/my_polls/delete`;
+
+  await axios.delete(path, { params: {pollID}})
+  .then((res) => {
+    console.log('poll deleted');
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
+export async function fetchPoll (pollId: string, setStateFunction: React.Dispatch<React.SetStateAction<Poll | undefined>>){
+  const path: string = `${import.meta.env.VITE_SERVER_ORIGIN}/my_polls/details`;
+
+  await axios.get(path, { params: {pollId}})
+  .then((res) => {
+    console.log('poll data : ', res.data);
+    setStateFunction(res.data);
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
+
+export async function fetchVotePoll (urlToken: string,setStateFunction: React.Dispatch<React.SetStateAction<Poll | undefined>>){
+  const path: string = `${import.meta.env.VITE_SERVER_ORIGIN}/polls/vote`;
+
+  await axios.get(path, { params: {urlToken}})
+  .then((res) => {
+    setStateFunction(res.data);
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
+
+export async function vote (urlToken: string, selectedOption: string) {
+  const path: string = `${import.meta.env.VITE_SERVER_ORIGIN}/polls/vote/action`;
+  await axios.post(path, {urlToken, selectedOption}, {withCredentials: true})
+  .then((res) => {
+    console.log('vote counted');
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+} 

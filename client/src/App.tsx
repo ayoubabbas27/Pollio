@@ -25,9 +25,19 @@ function App() {
               <Route index element={<pages.MyPolls />} />
 
               <Route path="new" element={<pages.NewPoll />} />
+
+              <Route path=":pollId" element={<pages.PollDetails />} />
             </Route>
 
           </Route>{/*End dash Routes */}
+
+        <Route path="polls/:urlToken">
+          <Route index element={<pages.VotePoll  />} />
+
+          <Route path="thankyou" element={<pages.Thankyou />} />
+
+        </Route>
+
 
       </Route>
 

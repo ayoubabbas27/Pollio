@@ -7,6 +7,9 @@ import SignUp from "./app/features/auth/SignUp"
 import MyPolls from "./app/features/polls/MyPolls"
 import Dashboard from "./app/Dashboard"
 import NewPoll from "./app/features/polls/new/NewPoll"
+import PollDetails from "./app/features/polls/details/PollDetails"
+import VotePoll from "./public/VotePoll"
+import Thankyou from "./public/Thankyou"
 
 export const pages = {
     LandingPage,
@@ -16,5 +19,8 @@ export const pages = {
     SignUp,
     MyPolls,
     Dashboard,
-    NewPoll
+    NewPoll,
+    PollDetails,
+    VotePoll,
+    Thankyou
 }

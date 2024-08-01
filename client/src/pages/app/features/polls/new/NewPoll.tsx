@@ -16,7 +16,7 @@ function NewPoll() {
 
     async function handleSubmit (event: React.FormEvent<HTMLFormElement>){
         event.preventDefault()
-        if (pollOptions.length > 0){
+        if (pollOptions.length >= 2){
             console.log('create new pool action call')
             await createNewPoll(context.state.user.userObj.id, questionInput, pollOptions);
             navigate('/dash/my_polls');

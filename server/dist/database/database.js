@@ -13,8 +13,30 @@ export const db = {
     findUser,
     getPollsForUser,
     getPollData,
-    createPoll
+    createPoll,
+    togglePollState,
+    deletePoll,
+    findPoll,
+    findPollForVote,
+    applyVote,
+    getDashboardData
 };
+async function getDashboardData(userId) {
+    function getTotalVotes(votes) {
+        const totalVotes = Object.values(votes).reduce((acc, curr) => {
+            acc = acc + curr;
+            return acc;
+        }, 0);
+        return totalVotes;
+    }
+    const polls = await getPollsForUser(userId);
+    const totalPolls = polls.length;
+    const totalVotes = polls.reduce((acc, curr) => {
+        acc = acc + getTotalVotes(curr.votes);
+        return acc;
+    }, 0);
+    return { totalPolls, totalVotes };
+}
 async function isEmailExists(email) {
     try {
         const [data] = await pool.query(`
@@ -90,4 +112,60 @@ async function createPoll(creatorID, question, optionsJSON, pollID, urlToken, vo
     `, [pollID, question, optionsJSON, votesJSON, urlToken, creatorID]);
     const newPoll = await getPollData(pollID);
     return newPoll;
+}
+async function togglePollState(pollID, newState) {
+    const [rows] = await pool.query(`
+        UPDATE polls
+        SET is_active = ?
+        WHERE id = ?
+    `, [newState, pollID]);
+    const pollArray = rows;
+    const poll = pollArray[0];
+    return poll;
+}
+async function deletePoll(pollID) {
+    await pool.query(`
+        DELETE FROM polls
+        WHERE id = ?    
+    `, [pollID]);
+}
+async function findPoll(pollId) {
+    const [rows] = await pool.query(`
+        SELECT * FROM polls
+        WHERE id = ?    
+    `, [pollId]);
+    const pollArray = rows;
+    const poll = pollArray[0];
+    return poll;
+}
+async function findPollForVote(urlToken) {
+    const [rows] = await pool.query(`
+        SELECT * FROM polls
+        WHERE url_token = ?    
+    `, [urlToken]);
+    const pollArray = rows;
+    const poll = pollArray[0];
+    return poll;
+}
+async function applyVote(urlToken, selectedOption) {
+    const poll = await findPollForVote(urlToken);
+    if (!poll) {
+        throw new Error('Poll not found');
+    }
+    const newVotes = { ...poll.votes };
+    console.log(newVotes);
+    if (newVotes[selectedOption] !== undefined) {
+        newVotes[selectedOption] += 1;
+    }
+    else {
+        newVotes[selectedOption] = 1;
+    }
+    const newVotesJSON = JSON.stringify(newVotes);
+    await pool.query(`
+        UPDATE polls 
+        SET votes = ?
+        WHERE url_token = ?
+    `, [newVotesJSON, urlToken]);
+    const updatedPoll = await findPollForVote(urlToken);
+    return updatedPoll;
 }

@@ -69,12 +69,19 @@ router.post('/api/login', async (req, res) => {
     }
 });
 router.get('/api/dashboard', async (req, res) => {
-    res.json("dashboard data extracted from the DB");
+    const userId = req.query.userId;
+    const { totalPolls, totalVotes } = await db.getDashboardData(userId);
+    res.json({ totalPolls, totalVotes });
 });
 router.get('/api/my_polls', async (req, res) => {
     const userId = req.query.userId;
     const pollsData = await db.getPollsForUser(userId);
     res.json(pollsData);
+});
+router.patch('/api/my_polls/toggleState', async (req, res) => {
+    const { pollID, newState } = req.body;
+    const poll = await db.togglePollState(pollID, newState);
+    res.json(poll);
 });
 router.post('/api/my_polls/new', async (req, res) => {
     const { creatorID, question, options } = req.body;
@@ -89,5 +96,27 @@ router.post('/api/my_polls/new', async (req, res) => {
     const newPoll = await db.createPoll(creatorID, question, optionsJSON, pollID, urlToken, votesJSON);
     console.log(newPoll);
     res.json(newPoll);
+});
+router.delete('/api/my_polls/delete', async (req, res) => {
+    const pollID = req.query.pollID;
+    console.log('pollID : ', pollID);
+    await db.deletePoll(pollID);
+});
+router.get('/api/my_polls/details', async (req, res) => {
+    const pollId = req.query.pollId;
+    console.log(pollId);
+    const poll = await db.findPoll(pollId);
+    res.json(poll);
+});
+router.get('/api/polls/vote', async (req, res) => {
+    const urlToken = req.query.urlToken;
+    console.log(urlToken);
+    const poll = await db.findPollForVote(urlToken);
+    res.json(poll);
+});
+router.post('/api/polls/vote/action', async (req, res) => {
+    const { urlToken, selectedOption } = req.body;
+    const poll = await db.applyVote(urlToken, selectedOption);
+    res.json(poll);
 });
 export default router;

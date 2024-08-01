@@ -1,8 +1,8 @@
-import { FetchPollsData } from "@/lib/actions";
+import { FetchPollsData, togglePollState, deletePoll } from "@/lib/actions";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { UI } from "@/components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Ellipsis } from 'lucide-react';
 
 function MyPolls() {
@@ -16,11 +16,11 @@ function MyPolls() {
     created_at: string;
     is_active: number;
   }
-  const context = useAuthContext()
+  const context = useAuthContext();
+  const navigate = useNavigate()
 
   useEffect(() => {
     FetchPollsData(setPageData, '/my_polls', context.state.user.userObj.id);
-    console.log(pageData);
   },[])
 
   const [pageData, setPageData] = useState<Poll[]>([]);
@@ -36,21 +36,39 @@ function MyPolls() {
       acc = acc + curr;
       return acc;
     },0)
-    return totalVotes;
+    return new Intl.NumberFormat().format(totalVotes) ;
   }
 
-  function handleTogglePollState (pollID: string){
-
+  async function handleTogglePollState (pollID: string, currentState: number){
+    let newState: number;
+    if (currentState == 0){
+      newState = 1;
+    }else{
+      newState = 0;
+    }
+    await togglePollState(pollID, newState);
+    navigate(0);
   }
 
-  function handleCopyPollUrl (urlToken: string){
+  async function handleCopyPollUrl (urlToken: string){
+    const pollURL = `${import.meta.env.VITE_CLIENT_BASE_URL}/polls/${urlToken}`;
+    try {
+      await navigator.clipboard.writeText(pollURL);
+      alert('Text copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  }
 
+  async function handleDeletePoll (pollID: string) {
+    await deletePoll(pollID);
+    window.location.reload();
   }
 
   return (
     <div className="w-full flex flex-col justify-start items-center gap-5">
       <div className="w-full flex flex-row justify-between items-center ">
-        <h1 className="text-4xl">{pageData.length} Poll{pageData.length !== 1 ? 's':''}</h1>
+        <h1 className="text-4xl">{ new Intl.NumberFormat().format(pageData.length)} Poll{pageData.length !== 1 ? 's':''}</h1>
         <UI.Button className="rounded-full">
           <Link to="/dash/my_polls/new"> 
             Create New Poll
@@ -96,14 +114,16 @@ function MyPolls() {
                         <UI.DropdownMenuItem asChild className="hover:cursor-pointer">
                           <Link to={`/dash/my_polls/${poll.id}`}>View details</Link>
                         </UI.DropdownMenuItem>
-                        <UI.DropdownMenuItem className="hover:cursor-pointer" onClick={() => handleTogglePollState(poll.id)}>
+                        <UI.DropdownMenuItem className="hover:cursor-pointer" onClick={() => handleTogglePollState(poll.id, poll.is_active)}>
                           {poll.is_active === 0 ? 'Activate' : 'Deactivate'}
                         </UI.DropdownMenuItem>
-                        <UI.DropdownMenuItem disabled={poll.is_active === 0} onClick={() => handleCopyPollUrl(poll.url_token)}>
+                        <UI.DropdownMenuItem disabled={poll.is_active === 0} onClick={() => handleCopyPollUrl(poll.url_token)} className="hover:cursor-pointer">
                           Copy url
                         </UI.DropdownMenuItem>
-                        <UI.DropdownMenuItem className="hover:cursor-pointer bg-red-200 transition-all duration-300 ease-in-out hover:bg-destructive hover:text-primary-foreground">
-                          Delete
+                        <UI.DropdownMenuItem className="p-0 mt-1" disabled={poll.is_active === 1} onClick={() => handleDeletePoll(poll.id)}>
+                          <span className="w-full h-full transition-all duration-300 ease-in-out hover:cursor-pointer bg-destructive/80 hover:bg-destructive px-2 py-1.5 rounded-sm text-primary-foreground">
+                            Delete
+                          </span>
                         </UI.DropdownMenuItem>
                       </UI.DropdownMenuContent>
                     </UI.DropdownMenu>
@@ -114,14 +134,6 @@ function MyPolls() {
           
         </UI.TableBody>
       </UI.Table>
-
-      <div>
-        {
-          Object.entries(pageData).map((poll) => (
-            <span></span>
-          ))
-        }
-      </div>
     </div>
   )
 }
