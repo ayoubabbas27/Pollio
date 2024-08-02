@@ -19,7 +19,7 @@ function Dashboard() {
 
 
   return (
-    <main className="w-full h-full grid gap-4 justify-items-center items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
+    <main className="w-full h-full grid gap-4 justify-items-center items-start grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
       <div className="p-4 flex flex-col justify-center items-start gap-3 border-2 border-slate-200 rounded-md w-full"> 
         <span className="text-xl font-semibold">Total polls created</span>
         <span className="text-muted-foreground">{new Intl.NumberFormat().format(pageData.totalPolls) }</span>

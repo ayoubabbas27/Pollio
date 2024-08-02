@@ -1,14 +1,14 @@
 import {LANDING_PAGE_NAV_LINKS} from "@/lib/constants";
 import { X , Menu, ArrowRight } from "lucide-react";
 import { useState } from "react";
-import { UI } from "@/components";
+import { CUSTOM, UI } from "@/components";
 import { Link } from "react-router-dom";
 
 function LandingPage() {
   const [mobileNavVisible, setMobileNavVisible] = useState(false);
 
   return (
-    <main className="flex flex-col justify-center items-center p-4 gap-10">
+    <main className="flex flex-col justify-center items-center gap-10">
 
       <nav className="fixed z-10 top-0 left-0 w-full px-5 py-3 bg-white flex flex-row justify-between items-center ">
 
@@ -103,25 +103,13 @@ function LandingPage() {
 
       </nav>
 
-      {/* <section id="#features" className="relative rounded-xl w-full mt-14 border border-red-400 flex flex-col justify-center items-center gap-6 max-h-[600px]">
-
-        <img src="/images/cool-background.png" alt="background hero section" className="object-cover"/>
-
-        <div className="absolute inset-0 flex flex-col justify-center items-center gap-5 text-white">
-          <span className="text-xl lg:text-2xl xl:4-xl font-bold">Create, Share, and Discover Polls with Pollio</span>
-          <span className="text-lg lg:text-xl text-center max-w-xl">Engage your audience with interactive polls. Collect valuable insights and make informed decisions. Join Pollio today and start creating polls that matter!</span>
-          <UI.Button className="flex justify-center items-center gap-2" size="lg">
-            Get Started Now <ArrowRight size={18} />
-          </UI.Button>
-        </div>
-      </section> */}
-      <section id="#features" className="relative rounded-xl w-full mt-14 flex justify-center items-center min-h-[450px] max-h-[600px] xl:h-[800px] border border-red-400 overflow-hidden">
+      <section id="#hero" className="relative w-full mt-20 flex justify-center items-center min-h-[450px] max-h-[600px] xl:h-[800px] overflow-hidden">
         <img src="/images/cool-background.png" alt="background hero section" className="absolute top-0 left-0 w-full h-full object-cover"/>
         <div className="absolute left-0 top-0 w-full h-full bg-gray-600 bg-opacity-35"></div>
         <div className="relative flex flex-col justify-center items-center gap-5 xl:gap-8 text-white text-center p-6">
           <span className="text-xl lg:text-2xl xl:text-4xl font-bold">Create, Share, and Discover Polls with Pollio</span>
           <span className="text-lg lg:text-xl max-w-xl">Engage your audience with interactive polls. Collect valuable insights and make informed decisions. Join Pollio today and start creating polls that matter!</span>
-          <UI.Button className="flex justify-center items-center gap-2" size="lg" asChild>
+          <UI.Button className="flex justify-center items-center gap-2 rounded-full" size="lg" asChild>
             <Link to="/sign_up">
               Get Started Now <ArrowRight size={18} />
             </Link>
@@ -129,21 +117,99 @@ function LandingPage() {
         </div>
       </section>
 
-      <section id="#about" className="w-full mt-10 border border-green-400">
-          Features section
+      <section id="#about" className="w-full mt-10  flex flex-col justify-center items-center gap-4 px-4">
+          <h2 className="text-3xl font-bold text-center mb-4 xl:mb-14">About Pollio</h2>
+          <div className="flex flex-row flex-wrap justify-center items-center gap-6 xl:gap-14">
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">Introduction</span>
+              <span className="text-muted-foreground text-center text-lg">Pollio is dedicated to providing a user-friendly platform for creating, sharing, and analyzing polls. Our goal is to help individuals and organizations gather valuable feedback and make informed decisions.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">Our Mission</span>
+              <span className="text-muted-foreground text-center text-lg">We aim to make polling accessible and straightforward for everyone, regardless of technical expertise.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">Our Vision</span>
+              <span className="text-muted-foreground text-center text-lg">To be the leading platform for interactive polling, empowering global connections and insights.</span>
+            </div>
+          </div>
       </section>
 
-      <section id="#testimonials" className="w-full mt-10 border border-blue-400">
-          Testimonials section
+      <section id="#features" className="w-full mt-10  flex flex-col justify-center items-center gap-4 px-4">
+          <h2 className="text-3xl font-bold text-center mb-4 xl:mb-14">Unlock the Power of Polling with Pollio</h2>
+          <div className="flex flex-row flex-wrap justify-center items-center gap-6 xl:gap-14">
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">Easy Poll Creation</span>
+              <span className="text-muted-foreground text-center text-lg">Create polls quickly and effortlessly with our intuitive interface. Customize your polls with various options and settings to suit your needs.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">Engage Your Audience</span>
+              <span className="text-muted-foreground text-center text-lg">Share your polls across social media, email, or embed them on your website. Engage your audience and gather valuable feedback in real-time.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">Analyze Results Instantly</span>
+              <span className="text-muted-foreground text-center text-lg">Access detailed analytics to understand the opinions and trends of your respondents. Make informed decisions based on real-time data and insights.</span>
+            </div>
+          </div>
       </section>
 
-      <section id="#contact_us" className="w-full mt-10 border border-purple-400">
-          Contact Us section
+      <section id="#how_it_works" className="w-full mt-10  flex flex-col justify-center items-center gap-10 px-4">
+      <h2 className="text-3xl font-bold text-center mb-4 xl:mb-10">How Pollio Works</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-10 mx-auto">
+            <div className="flex flex-col justify-center items-center  gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">1. Sign Up and Get Started</span>
+              <span className="text-muted-foreground text-center text-lg">Create your free Pollio account in minutes. Start by signing up with your email or social media accounts.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">2. Create Your Polls</span>
+              <span className="text-muted-foreground text-center text-lg">Use our simple poll creation tool to design your poll. Choose from multiple question types, customize options, and set your preferences.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">3. Share Your Poll</span>
+              <span className="text-muted-foreground text-center text-lg">Once your poll is ready, share it via a unique link, embed it on your website, or distribute it through social media and email.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">4. Collect Responses</span>
+              <span className="text-muted-foreground text-center text-lg">Watch the responses roll in real-time. Engage with your audience and encourage participation to gather valuable feedback.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">5. Analyze the Data</span>
+              <span className="text-muted-foreground text-center text-lg">Access comprehensive analytics to visualize the results. Understand trends, patterns, and insights to make informed decisions.</span>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-3 max-w-xl xl:w-[400px]">
+              <span className="text-primary text-xl font-semibold text-center">6. Take Action</span>
+              <span className="text-muted-foreground text-center text-lg">Use the insights gained from your polls to improve your business, projects, or educational programs. Make data-driven decisions with confidence.</span>
+            </div>
+          </div>
+          <UI.Button className="flex justify-center items-center gap-2 rounded-full" size="lg" asChild>
+            <Link to="/sign_up">
+              Get Started Now <ArrowRight size={18} />
+            </Link>
+          </UI.Button>
       </section>
 
-      <footer className="w-full mt-10 border border-purple-400">
-          Footer section
-      </footer>
+      <section id="#contact_us" className="w-full mt-10 bg-[#16b18f] flex flex-row flex-wrap justify-center items-center gap-6 px-4 py-7">
+        <div className="flex flex-col justify-start items-start max-w-[500px]">
+          <h2 className="text-2xl font-bold mb-4 xl:mb-10 text-white">Get in Touch with Us</h2>
+          <span className="text-primary-foreground text-base">We're here to help you with any questions or feedback you may have. Reach out to us and our team will get back to you as soon as possible.</span>
+        </div>
+        <form action="POST" className="w-[500px] flex flex-col justify-center items-center gap-5 p-5 border-2 border-slate-50 rounded-lg"> 
+          <div className="w-full flex flex-col justify-start items-start gap-2">
+            <UI.Label htmlFor="email" className="text-white text-md">Email</UI.Label>
+            <UI.Input type="email" id="email" name="email" placeholder="example@gmail.com"/>
+          </div>
+          <div className="w-full flex flex-col justify-start items-start gap-2">
+            <UI.Label htmlFor="subject" className="text-white text-md">Subject</UI.Label>
+            <UI.Input type="text" id="subject" name="subject" placeholder="What is the subject of your message ?"/>
+          </div>
+          <div className="w-full flex flex-col justify-start items-start gap-2">
+            <UI.Label htmlFor="message" className="text-white text-md">Message</UI.Label>
+            <UI.Textarea id="message" name="message" placeholder="Write your message here..."/>
+          </div>
+        </form>
+      </section>
+
+      <CUSTOM.Footer />
 
     </main>
   )
