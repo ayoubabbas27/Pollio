@@ -27,13 +27,6 @@ Pollio is a full-stack polling system that allows users to create, share, and vi
 - **API**: 
   - **RESTful API**: Designed for interacting with the frontend and managing poll operations.
 
-## Screenshots
-### Poll Creation Page
-![Poll Creation](screenshots/poll-creation.png)
-
-### Poll Results Page
-![Poll Results](screenshots/poll-results.png)
-
 ## Challenges and Solutions
 ### User Authentication:
 - **Challenge**: Implementing secure authentication and session management.
