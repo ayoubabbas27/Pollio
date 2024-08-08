@@ -1,4 +1,4 @@
-# Pollio - Système de Sondage (Full-Stack)
+# Pollio - Polling System (Full-Stack)
 
 ## Overview
 Pollio is a full-stack polling system that allows users to create, share, and view poll results. This project demonstrates a complete solution for creating and managing polls, utilizing modern technologies for both frontend and backend development.
@@ -35,10 +35,6 @@ Pollio is a full-stack polling system that allows users to create, share, and vi
 ![Poll Results](screenshots/poll-results.png)
 
 ## Challenges and Solutions
-### Real-Time Updates:
-- **Challenge**: Ensuring real-time updates for poll results as votes are cast.
-- **Solution**: Implemented WebSocket or long-polling to push updates from the server to the client in real-time.
-
 ### User Authentication:
 - **Challenge**: Implementing secure authentication and session management.
 - **Solution**: Used JWT for stateless authentication and managed user sessions effectively.
